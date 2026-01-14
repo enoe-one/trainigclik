@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Reaction Game Stable</title>
+
+<style>
+body {
+    margin: 0;
+    background: #0f0f0f;
+    color: white;
+    font-family: Arial;
+    overflow: hidden;
+}
+
+#menu {
+    text-align: center;
+    margin-top: 40px;
+}
+
+button {
+    padding: 12px 22px;
+    margin: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#game {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.dot {
+    position: absolute;
+    border-radius: 50%;
+    background: #ff2d2d;
+}
+
+#hud {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 18px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="menu">
+    <h1>Reaction Game</h1>
+    <p>Choisis une difficulté</p>
+    <button onclick="start('facile')">Facile</button>
+    <button onclick="start('moyen')">Moyen</button>
+    <button onclick="start('difficile')">Difficile</button>
+    <button onclick="start('extreme')">Extreme</button>
+    <button onclick="start('god')">God</button>
+</div>
+
+<div id="game">
+    <div id="hud">
+        Temps : <span id="time">120</span>s |
+        Score : <span id="score">0</span>
+    </div>
+</div>
+
+<script>
+let score = 0;
+let time = 120;
+let gameInterval = null;
+let dotTimer = null;
+let currentConfig = null;
+
+const difficulty = {
+    facile:   { size: 50, delay: 1200 },
+    moyen:    { size: 40, delay: 900 },
+    difficile:{ size: 30, delay: 700 },
+    extreme:  { size: 20, delay: 450 },
+    god:      { size: 15, delay: 300 }
+};
+
+function start(level) {
+    currentConfig = difficulty[level];
+
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("game").style.display = "block";
+
+    score = 0;
+    time = 120;
+
+    updateHUD();
+    spawnDot();
+
+    gameInterval = setInterval(() => {
+        time--;
+        updateHUD();
+        if (time <= 0) endGame();
+    }, 1000);
+}
+
+function updateHUD() {
+    document.getElementById("score").textContent = score;
+    document.getElementById("time").textContent = time;
+}
+
+function spawnDot() {
+    removeDot();
+
+    const dot = document.createElement("div");
+    dot.className = "dot";
+    dot.style.width = currentConfig.size + "px";
+    dot.style.height = currentConfig.size + "px";
+
+    dot.style.left = Math.random() * (window.innerWidth - currentConfig.size) + "px";
+    dot.style.top = Math.random() * (window.innerHeight - currentConfig.size) + "px";
+
+    dot.onclick = () => {
+        score++;
+        updateHUD();
+        spawnDot();
+    };
+
+    document.getElementById("game").appendChild(dot);
+
+    dotTimer = setTimeout(() => {
+        spawnDot();
+    }, currentConfig.delay);
+}
+
+function removeDot() {
+    clearTimeout(dotTimer);
+    const d = document.querySelector(".dot");
+    if (d) d.remove();
+}
+
+function endGame() {
+    clearInterval(gameInterval);
+    clearTimeout(dotTimer);
+    removeDot();
+    alert("Fin du jeu ! Score : " + score);
+    location.reload();
+}
+</script>
+
+</body>
+</html>

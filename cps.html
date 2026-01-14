@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>CPS Test - Reaction Game</title>
+    <link rel="stylesheet" href="style.css"> <style>
+        body { margin: 0; background: #0f0f0f; color: white; font-family: Arial; text-align: center; }
+        #click-area {
+            width: 80%; height: 300px;
+            margin: 50px auto; border: 2px dashed #ff2d2d;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; cursor: pointer; user-select: none;
+        }
+        .stats { font-size: 20px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div> <h1>Test de CPS</h1>
+    <p>Clique le plus vite possible dans le cadre !</p>
+
+    <div id="click-area">Clique ici pour commencer !</div>
+    
+    <div class="stats">
+        Temps restant : <span id="timer">10</span>s | 
+        Clicks : <span id="clicks">0</span>
+    </div>
+
+    <script>
+        let clicks = 0;
+        let timeLeft = 10;
+        let active = false;
+        let timerId = null;
+
+        const area = document.getElementById('click-area');
+        const clickDisplay = document.getElementById('clicks');
+        const timeDisplay = document.getElementById('timer');
+
+        area.addEventListener('mousedown', () => {
+            if (timeLeft <= 0) return;
+
+            if (!active) {
+                active = true;
+                startTimer();
+            }
+
+            clicks++;
+            clickDisplay.textContent = clicks;
+        });
+
+        function startTimer() {
+            timerId = setInterval(() => {
+                timeLeft--;
+                timeDisplay.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerId);
+                    alert("Terminé ! Votre CPS est de : " + (clicks / 10).toFixed(1));
+                    reset();
+                }
+            }, 1000);
+        }
+
+        function reset() {
+            clicks = 0;
+            timeLeft = 10;
+            active = false;
+            clickDisplay.textContent = "0";
+            timeDisplay.textContent = "10";
+            area.textContent = "Clique ici pour recommencer !";
+        }
+    </script>
+</body>
+</html>

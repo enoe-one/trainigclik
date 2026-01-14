@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Aim Trainer - Accueil</title>
+    <style>
+        body { margin: 0; background: #0f0f0f; color: white; font-family: Arial; text-align: center; }
+        .container { display: flex; justify-content: center; gap: 20px; margin-top: 50px; flex-wrap: wrap; }
+        .card {
+            background: #1a1a1a; border: 1px solid #333; padding: 20px; width: 250px;
+            border-radius: 10px; transition: 0.3s; cursor: pointer; text-decoration: none; color: white;
+        }
+        .card:hover { border-color: #ff2d2d; transform: translateY(-5px); }
+        h2 { color: #ff2d2d; }
+    </style>
+</head>
+<body>
+
+    <h1>Bienvenue sur Aim Trainer</h1>
+    <p>Choisissez un mode pour améliorer vos réflexes</p>
+
+    <div class="container">
+        <a href="entrainement clique.html" class="card">
+            <h2>Précision</h2>
+            <p>Cliquez sur les cibles avant qu'elles ne disparaissent.</p>
+        </a>
+
+        <a href="entrainement suivie.html" class="card">
+            <h2>Suivi (Hover)</h2>
+            <p>Gardez votre curseur sur la cible en mouvement.</p>
+        </a>
+
+        <a href="cps.html" class="card">
+            <h2>Vitesse (CPS)</h2>
+            <p>Testez votre nombre de clics par seconde.</p>
+        </a>
+    </div>
+
+</body>
+</html>
