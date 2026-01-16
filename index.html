@@ -2,37 +2,154 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Aim Trainer - Accueil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aim Trainer - Accueil Elite</title>
     <style>
-        body { margin: 0; background: #0f0f0f; color: white; font-family: Arial; text-align: center; }
-        .container { display: flex; justify-content: center; gap: 20px; margin-top: 50px; flex-wrap: wrap; }
-        .card {
-            background: #1a1a1a; border: 1px solid #333; padding: 20px; width: 250px;
-            border-radius: 10px; transition: 0.3s; cursor: pointer; text-decoration: none; color: white;
+        :root {
+            --primary: #ff2d2d;
+            --primary-hover: #ff5e5e;
+            --bg-dark: #0a0a0a;
+            --card-bg: #161616;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
         }
-        .card:hover { border-color: #ff2d2d; transform: translateY(-5px); }
-        h2 { color: #ff2d2d; }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* En-tête stylisé */
+        header {
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to bottom, #fff 40%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            margin-bottom: 50px;
+        }
+
+        /* Grille de cartes */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #2a2a2a;
+            padding: 40px 30px;
+            border-radius: 16px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Effet de lueur au survol */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 45, 45, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 45, 45, 0.1);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .card p {
+            color: var(--text-dim);
+            line-height: 1.5;
+            font-size: 0.95rem;
+            margin: 0;
+            position: relative;
+        }
+
+        /* Icône décorative (optionnelle) */
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .container { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
-    <h1>Bienvenue sur Aim Trainer</h1>
-    <p>Choisissez un mode pour améliorer vos réflexes</p>
+    <header>
+        <h1>Aim Trainer</h1>
+        <p class="subtitle">Améliorez vos performances et vos réflexes</p>
+    </header>
 
     <div class="container">
         <a href="entrainement clique.html" class="card">
+            <div class="card-icon">🎯</div>
             <h2>Précision</h2>
-            <p>Cliquez sur les cibles avant qu'elles ne disparaissent.</p>
+            <p>Travaillez votre précision en cliquant sur des cibles dynamiques.</p>
         </a>
 
         <a href="entrainement suivie.html" class="card">
-            <h2>Suivi (Hover)</h2>
-            <p>Gardez votre curseur sur la cible en mouvement.</p>
+            <div class="card-icon">🔀</div>
+            <h2>Suivi</h2>
+            <p>Gardez le curseur sur la cible pour améliorer votre tracking.</p>
         </a>
 
         <a href="cps.html" class="card">
+            <div class="card-icon">⚡</div>
             <h2>Vitesse (CPS)</h2>
-            <p>Testez votre nombre de clics par seconde.</p>
+            <p>Défiez les lois de la physique avec votre vitesse de clic.</p>
+        </a>
+
+        <a href="reflexes.html" class="card">
+            <div class="card-icon">⏱️</div>
+            <h2>Réflexes</h2>
+            <p>Testez votre temps de réaction et votre perception du temps.</p>
         </a>
     </div>
 
