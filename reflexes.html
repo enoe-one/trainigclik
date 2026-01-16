@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tests de Réflexes & Perception</title>
+    <style>
+        body { margin: 0; background: #0f0f0f; color: white; font-family: Arial; text-align: center; }
+        .header-nav { background: #1a1a1a; padding: 15px; border-bottom: 2px solid #ff2d2d; margin-bottom: 20px; }
+        .header-nav a { color: white; margin: 0 15px; text-decoration: none; }
+        
+        .container { max-width: 800px; margin: auto; padding: 20px; }
+        .mode-box { background: #1a1a1a; padding: 30px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #333; }
+        
+        button { padding: 12px 25px; font-size: 16px; cursor: pointer; background: #ff2d2d; color: white; border: none; border-radius: 5px; transition: 0.2s; }
+        button:hover { background: #ff5e5e; }
+
+        /* Style pour le test de réaction */
+        #reaction-area {
+            width: 300px; height: 300px; margin: 20px auto;
+            background: #444; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; cursor: pointer; user-select: none;
+        }
+        .red { background: #ff2d2d !important; }
+        .green { background: #2dfb2d !important; color: black; }
+        
+        #result-timer, #result-reaction { font-size: 24px; margin-top: 15px; color: #ff2d2d; }
+    </style>
+</head>
+<body>
+
+<div class="header-nav">
+    <a href="index.html">Accueil</a> | 
+    <a href="entrainement clique.html">Précision</a> | 
+    <a href="entrainement suivie.html">Suivi</a> | 
+    <a href="reflexes.html"><b>Reflexes</b></a>
+</div>
+
+<div class="container">
+    <h1>Tests de Réflexes</h1>
+
+    <div class="mode-box">
+        <h2>Perception : 10 Secondes</h2>
+        <p>Cliquez sur "START", comptez 10 secondes dans votre tête, puis cliquez sur "STOP".</p>
+        <button id="timer-btn">START</button>
+        <div id="result-timer">Score : --</div>
+    </div>
+
+    <div class="mode-box">
+        <h2>Réaction Visuelle</h2>
+        <p>Cliquez sur le carré pour l'armer. Quand il devient VERT, cliquez le plus vite possible !</p>
+        <div id="reaction-area">Clique ici pour armer</div>
+        <div id="result-reaction">Temps : --</div>
+    </div>
+</div>
+
+<script>
+    // --- LOGIQUE PERCEPTION 10s ---
+    let startTime;
+    let timerRunning = false;
+    const timerBtn = document.getElementById('timer-btn');
+    const timerResult = document.getElementById('result-timer');
+
+    timerBtn.onclick = () => {
+        if (!timerRunning) {
+            startTime = Date.now();
+            timerRunning = true;
+            timerBtn.textContent = "STOP !";
+            timerResult.textContent = "Chrono lancé...";
+        } else {
+            let endTime = Date.now();
+            let duration = (endTime - startTime) / 1000;
+            let diff = Math.abs(10 - duration).toFixed(3);
+            
+            timerRunning = false;
+            timerBtn.textContent = "START";
+            timerResult.textContent = `Temps: ${duration}s (Écart: ${diff}s)`;
+        }
+    };
+
+    // --- LOGIQUE RÉACTION ALÉATOIRE ---
+    const reactionArea = document.getElementById('reaction-area');
+    const reactionResult = document.getElementById('result-reaction');
+    let reactionStart;
+    let timeoutId;
+    let isWaiting = false;
+
+    reactionArea.onclick = () => {
+        if (reactionArea.classList.contains('green')) {
+            // Clic réussi sur le vert
+            let reactionTime = (Date.now() - reactionStart) / 1000;
+            reactionResult.textContent = `Temps : ${reactionTime}s`;
+            resetReaction();
+        } 
+        else if (isWaiting) {
+            // Clic trop tôt
+            clearTimeout(timeoutId);
+            reactionResult.textContent = "Trop tôt ! Recommence.";
+            resetReaction();
+        } 
+        else {
+            // Armement
+            reactionArea.textContent = "Attends le vert...";
+            reactionArea.classList.add('red');
+            isWaiting = true;
+            
+            let randomDelay = Math.random() * 3000 + 2000; // Entre 2 et 5 secondes
+            timeoutId = setTimeout(() => {
+                reactionArea.classList.remove('red');
+                reactionArea.classList.add('green');
+                reactionArea.textContent = "CLIQUE !";
+                reactionStart = Date.now();
+            }, randomDelay);
+        }
+    };
+
+    function resetReaction() {
+        isWaiting = false;
+        reactionArea.className = ""; // Enlever green/red
+        reactionArea.textContent = "Clique ici pour armer";
+    }
+</script>
+
+</body>
+</html>
