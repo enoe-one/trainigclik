@@ -1,149 +1,76 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Reaction Game Hover</title>
-
-<style>
-body {
-    margin: 0;
-    background: #0f0f0f;
-    color: white;
-    font-family: Arial;
-    overflow: hidden;
-}
-
-#menu {
-    text-align: center;
-    margin-top: 40px;
-}
-
-button {
-    padding: 12px 22px;
-    margin: 6px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#game {
-    display: none;
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-}
-
-.dot {
-    position: absolute;
-    border-radius: 50%;
-    background: #ff2d2d;
-}
-
-#hud {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    font-size: 18px;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Aim Trainer - Suivi</title>
+    <style>
+        :root { --primary: #00d4ff; --bg: #0a0a0a; --card: #161616; } /* Bleu pour différencier du clic */
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', Arial; overflow: hidden; }
+        header { background: #111; padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--primary); }
+        header a { color: #a0a0a0; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        header a:hover, header a.active { color: var(--primary); }
+        #menu { text-align: center; padding-top: 50px; }
+        .difficulty-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 30px; }
+        button { background: var(--card); border: 1px solid #333; color: white; padding: 20px 30px; border-radius: 10px; cursor: pointer; transition: 0.3s; }
+        button:hover { border-color: var(--primary); transform: translateY(-3px); }
+        #game { display: none; width: 100vw; height: 100vh; position: relative; }
+        .dot { position: absolute; border-radius: 50%; background: var(--primary); box-shadow: 0 0 20px var(--primary); }
+        #hud { position: fixed; top: 80px; left: 20px; font-size: 20px; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 5px; }
+    </style>
 </head>
-
 <body>
 
-<div id="menu">
-    <h1>Reaction Game</h1>
-    <p>Passe ton curseur sur le point</p>
-    <button onclick="start('facile')">Facile</button>
-    <button onclick="start('moyen')">Moyen</button>
-    <button onclick="start('difficile')">Difficile</button>
-    <button onclick="start('extreme')">Extreme</button>
-    <button onclick="start('god')">God</button>
-</div>
+<header>
+    <a href="index.html">ACCUEIL</a>
+    <a href="entrainement clique.html">PRÉCISION</a>
+    <a href="entrainement suivie.html" class="active">SUIVI</a>
+    <a href="cps.html">VITESSE</a>
+    <a href="reflexes.html">RÉFLEXES</a>
+</header>
 
-<div id="game">
-    <div id="hud">
-        Temps : <span id="time">120</span>s |
-        Score : <span id="score">0</span>
+<div id="menu">
+    <h1>Suivi de Curseur</h1>
+    <p>Survolez la cible sans cliquer pour marquer des points.</p>
+    <div class="difficulty-container">
+        <button onclick="start('facile')">Facile</button>
+        <button onclick="start('moyen')">Moyen</button>
+        <button onclick="start('difficile')">Difficile</button>
+        <button onclick="start('extreme')">Extreme</button>
+        <button onclick="start('god')">God</button>
     </div>
 </div>
 
-<script>
-let score = 0;
-let time = 120;
-let gameInterval = null;
-let dotTimer = null;
-let currentConfig = null;
+<div id="game">
+    <div id="hud">Temps : <span id="time">120</span>s | Score : <span id="score">0</span></div>
+</div>
 
-const difficulty = {
-    facile:   { size: 50, delay: 1200 },
-    moyen:    { size: 40, delay: 900 },
-    difficile:{ size: 30, delay: 700 },
-    extreme:  { size: 20, delay: 450 },
-    god:      { size: 15, delay: 300 }
-};
+<script>
+/* Même logique JS que Précision mais avec mouseenter */
+let score = 0, time = 120, gameInterval = null, dotTimer = null, currentConfig = null;
+const difficulty = { facile: { size: 60, delay: 1000 }, moyen: { size: 45, delay: 800 }, difficile: { size: 35, delay: 600 }, extreme: { size: 25, delay: 400 }, god: { size: 18, delay: 250 } };
 
 function start(level) {
     currentConfig = difficulty[level];
-
     document.getElementById("menu").style.display = "none";
     document.getElementById("game").style.display = "block";
-
-    score = 0;
-    time = 120;
-
     updateHUD();
     spawnDot();
-
-    gameInterval = setInterval(() => {
-        time--;
-        updateHUD();
-        if (time <= 0) endGame();
-    }, 1000);
+    gameInterval = setInterval(() => { time--; updateHUD(); if (time <= 0) endGame(); }, 1000);
 }
-
-function updateHUD() {
-    document.getElementById("score").textContent = score;
-    document.getElementById("time").textContent = time;
-}
-
+function updateHUD() { document.getElementById("score").textContent = score; document.getElementById("time").textContent = time; }
 function spawnDot() {
     removeDot();
-
     const dot = document.createElement("div");
     dot.className = "dot";
-    dot.style.width = currentConfig.size + "px";
-    dot.style.height = currentConfig.size + "px";
-
+    dot.style.width = dot.style.height = currentConfig.size + "px";
     dot.style.left = Math.random() * (window.innerWidth - currentConfig.size) + "px";
-    dot.style.top = Math.random() * (window.innerHeight - currentConfig.size) + "px";
-
-    // 👇 SURVOL AU LIEU DU CLIC
-    dot.addEventListener("mouseenter", () => {
-        score++;
-        updateHUD();
-        spawnDot();
-    });
-
+    dot.style.top = Math.random() * (window.innerHeight - currentConfig.size - 70) + 70 + "px";
+    dot.onmouseenter = () => { score++; updateHUD(); spawnDot(); };
     document.getElementById("game").appendChild(dot);
-
-    dotTimer = setTimeout(() => {
-        spawnDot();
-    }, currentConfig.delay);
+    dotTimer = setTimeout(spawnDot, currentConfig.delay);
 }
-
-function removeDot() {
-    clearTimeout(dotTimer);
-    const d = document.querySelector(".dot");
-    if (d) d.remove();
-}
-
-function endGame() {
-    clearInterval(gameInterval);
-    clearTimeout(dotTimer);
-    removeDot();
-    alert("Fin du jeu ! Score : " + score);
-    location.reload();
-}
+function removeDot() { clearTimeout(dotTimer); const d = document.querySelector(".dot"); if (d) d.remove(); }
+function endGame() { clearInterval(gameInterval); removeDot(); alert("Fin ! Score : " + score); location.reload(); }
 </script>
-
 </body>
 </html>
