@@ -2,71 +2,77 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>CPS Test - Reaction Game</title>
-    <link rel="stylesheet" href="style.css"> <style>
-        body { margin: 0; background: #0f0f0f; color: white; font-family: Arial; text-align: center; }
+    <title>Aim Trainer - CPS Test</title>
+    <style>
+        :root { --primary: #ffbd2d; --bg: #0a0a0a; --card: #1c1c1c; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', Arial; text-align: center; }
+        header { background: #111; padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--primary); }
+        header a { color: #a0a0a0; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        header a:hover, header a.active { color: var(--primary); }
+
         #click-area {
-            width: 80%; height: 300px;
-            margin: 50px auto; border: 2px dashed #ff2d2d;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; cursor: pointer; user-select: none;
+            width: 90%; max-width: 600px; height: 350px;
+            margin: 50px auto; border: 2px solid #333; border-radius: 20px;
+            background: var(--card); display: flex; align-items: center; justify-content: center;
+            font-size: 28px; cursor: pointer; user-select: none; transition: 0.1s;
         }
-        .stats { font-size: 20px; margin-top: 20px; }
+        #click-area:active { transform: scale(0.98); border-color: var(--primary); background: #252525; }
+        
+        .stats-container { display: flex; justify-content: center; gap: 30px; margin-top: 20px; }
+        .stat-box { background: #111; padding: 15px 25px; border-radius: 10px; border: 1px solid #222; }
+        .stat-box span { display: block; font-size: 32px; color: var(--primary); font-weight: bold; }
     </style>
 </head>
 <body>
-    <div id="header-placeholder"></div> <h1>Test de CPS</h1>
-    <p>Clique le plus vite possible dans le cadre !</p>
 
-    <div id="click-area">Clique ici pour commencer !</div>
-    
-    <div class="stats">
-        Temps restant : <span id="timer">10</span>s | 
-        Clicks : <span id="clicks">0</span>
-    </div>
+<header>
+    <a href="index.html">ACCUEIL</a>
+    <a href="entrainement clique.html">PRÉCISION</a>
+    <a href="entrainement suivie.html">SUIVI</a>
+    <a href="cps.html" class="active">VITESSE</a>
+    <a href="reflexes.html">RÉFLEXES</a>
+</header>
 
-    <script>
-        let clicks = 0;
-        let timeLeft = 10;
-        let active = false;
-        let timerId = null;
+<h1>Test de Clics (10s)</h1>
+<p>Démolissez votre souris !</p>
 
-        const area = document.getElementById('click-area');
-        const clickDisplay = document.getElementById('clicks');
-        const timeDisplay = document.getElementById('timer');
+<div id="click-area">CLIQUEZ ICI POUR COMMENCER</div>
 
-        area.addEventListener('mousedown', () => {
-            if (timeLeft <= 0) return;
+<div class="stats-container">
+    <div class="stat-box">Temps<span><span id="timer" style="display:inline;">10</span>s</span></div>
+    <div class="stat-box">Clicks<span id="clicks">0</span></div>
+</div>
 
-            if (!active) {
-                active = true;
-                startTimer();
+<script>
+    let clicks = 0, timeLeft = 10, active = false, timerId = null;
+    const area = document.getElementById('click-area');
+    const clickDisplay = document.getElementById('clicks');
+    const timeDisplay = document.getElementById('timer');
+
+    area.addEventListener('mousedown', (e) => {
+        if (timeLeft <= 0) return;
+        if (!active) { active = true; startTimer(); area.textContent = "CLIQUEZ !"; }
+        clicks++;
+        clickDisplay.textContent = clicks;
+    });
+
+    function startTimer() {
+        timerId = setInterval(() => {
+            timeLeft--;
+            timeDisplay.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+                alert("Score final : " + (clicks / 10).toFixed(1) + " CPS (" + clicks + " clics)");
+                reset();
             }
+        }, 1000);
+    }
 
-            clicks++;
-            clickDisplay.textContent = clicks;
-        });
-
-        function startTimer() {
-            timerId = setInterval(() => {
-                timeLeft--;
-                timeDisplay.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timerId);
-                    alert("Terminé ! Votre CPS est de : " + (clicks / 10).toFixed(1));
-                    reset();
-                }
-            }, 1000);
-        }
-
-        function reset() {
-            clicks = 0;
-            timeLeft = 10;
-            active = false;
-            clickDisplay.textContent = "0";
-            timeDisplay.textContent = "10";
-            area.textContent = "Clique ici pour recommencer !";
-        }
-    </script>
+    function reset() {
+        clicks = 0; timeLeft = 10; active = false;
+        clickDisplay.textContent = "0"; timeDisplay.textContent = "10";
+        area.textContent = "CLIQUEZ POUR RECOMMENCER";
+    }
+</script>
 </body>
 </html>
