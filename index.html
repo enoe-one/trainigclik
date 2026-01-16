@@ -6,191 +6,141 @@
     <title>Aim Trainer - Dashboard</title>
     <style>
         :root {
-            --primary: #ff2d2d;
-            --primary-glow: rgba(255, 45, 45, 0.3);
+            --primary: #ff2d2d; /* Rouge Precision */
             --bg: #050505;
             --card-bg: #0f0f0f;
-            --text-main: #ffffff;
-            --text-dim: #888888;
+            --text-dim: #888;
         }
 
         body {
             margin: 0;
             background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: white;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Arrière-plan décoratif */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(255, 45, 45, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(255, 45, 45, 0.05) 0%, transparent 40%);
-            z-index: -1;
         }
 
         header {
-            margin-top: 80px;
+            width: 100%;
+            padding: 20px 0;
+            background: rgba(10, 10, 10, 0.9);
+            border-bottom: 1px solid #222;
             text-align: center;
-            animation: fadeInDown 0.8s ease-out;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        h1 {
-            font-size: 4rem;
+        .logo {
+            font-size: 1.5rem;
             font-weight: 900;
+            letter-spacing: 2px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--primary); }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
             margin: 0;
-            letter-spacing: -2px;
-            text-transform: uppercase;
             background: linear-gradient(to bottom, #fff 50%, #666 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .subtitle {
-            color: var(--text-dim);
-            font-size: 1rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-top: 10px;
-        }
-
-        /* Grille des modes de jeu */
         .container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             width: 90%;
             max-width: 1200px;
-            margin: 60px 0;
-            animation: fadeInUp 1s ease-out;
+            padding-bottom: 50px;
         }
 
         .card {
-            position: relative;
             background: var(--card-bg);
             border: 1px solid #1a1a1a;
             border-radius: 12px;
-            padding: 40px 30px;
+            padding: 30px;
             text-decoration: none;
             color: white;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            overflow: hidden;
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        /* Ligne de couleur sur le dessus */
-        .card::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 3px;
-            background: var(--primary);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
+            border-top: 3px solid transparent;
         }
 
         .card:hover {
-            border-color: #333;
             transform: translateY(-8px);
             background: #141414;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
         }
 
-        .card:hover::after {
-            transform: scaleX(1);
-        }
+        /* Couleurs spécifiques par mode pour la cohérence */
+        .card.precision:hover { border-top-color: #ff2d2d; }
+        .card.suivi:hover { border-top-color: #00d4ff; }
+        .card.vitesse:hover { border-top-color: #ffbd2d; }
+        .card.reflexes:hover { border-top-color: #2dfb2d; }
+        .card.audio:hover { border-top-color: #a32dff; }
+        .card.bomb:hover { border-top-color: #ff8400; }
 
-        .card-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            filter: grayscale(1);
-            transition: 0.3s;
-        }
+        .card-icon { font-size: 2.5rem; margin-bottom: 15px; }
+        .card h2 { margin: 0 0 10px 0; font-size: 1.2rem; text-transform: uppercase; }
+        .card p { font-size: 0.9rem; color: var(--text-dim); margin: 0; line-height: 1.5; }
 
-        .card:hover .card-icon {
-            filter: grayscale(0) drop-shadow(0 0 10px var(--primary-glow));
-        }
-
-        .card h2 {
-            font-size: 1.4rem;
-            margin: 0 0 10px 0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .card p {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* Animations */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .container { grid-template-columns: 1fr; }
-        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Aim Trainer</h1>
-        <div class="subtitle">Peak Performance Training</div>
+        <a href="index.html" class="logo">AIM<span>TRAINER</span></a>
     </header>
 
+    <div class="hero">
+        <h1>Dashboard d'Entraînement</h1>
+        <p style="color: var(--text-dim);">Sélectionnez un module pour commencer votre session</p>
+    </div>
+
     <div class="container">
-        <a href="entrainement clique.html" class="card">
+        <a href="entrainement clique.html" class="card precision">
             <div class="card-icon">🎯</div>
             <h2>Précision</h2>
-            <p>Améliorez votre "flick-shot" et votre précision sur des cibles statiques et mouvantes.</p>
+            <p>Cliquez sur des cibles dynamiques pour améliorer votre précision de tir.</p>
         </a>
 
-        <a href="entrainement suivie.html" class="card">
+        <a href="entrainement suivie.html" class="card suivi">
             <div class="card-icon">👁️</div>
-            <h2>Tracking</h2>
-            <p>Entraînez votre capacité à suivre une cible en mouvement de manière fluide.</p>
+            <h2>Suivi (Hover)</h2>
+            <p>Gardez votre curseur sur la cible sans cliquer pour entraîner votre tracking.</p>
         </a>
 
-        <a href="cps.html" class="card">
+        <a href="cps.html" class="card vitesse">
             <div class="card-icon">⚡</div>
-            <h2>Vitesse</h2>
-            <p>Mesurez votre nombre de clics par seconde (CPS) et dépassez vos limites.</p>
+            <h2>Vitesse (CPS)</h2>
+            <p>Testez votre vitesse de clic pure sur un intervalle de 10 secondes.</p>
         </a>
 
-        <a href="reflexes.html" class="card">
-            <div class="card-icon">⏲️</div>
+        <a href="reflexes.html" class="card reflexes">
+            <div class="card-icon">⏱️</div>
             <h2>Réflexes</h2>
-            <p>Testez votre temps de réaction pur et votre perception du temps.</p>
+            <p>Perception du temps et temps de réaction visuel au changement de couleur.</p>
         </a>
-        <a href="audio.html" class="card">
-    <div class="card-icon">🎧</div>
-    <h2>Écho Auditif</h2>
-    <p>Écoutez et cliquez. Localisez la source du son sans aucun repère visuel.</p>
-</a>
+
+        <a href="audio.html" class="card audio">
+            <div class="card-icon">🎧</div>
+            <h2>Écho Auditif</h2>
+            <p>Entraînez votre oreille à localiser des cibles invisibles par le son.</p>
+        </a>
     </div>
 
 </body>
 </html>
-
