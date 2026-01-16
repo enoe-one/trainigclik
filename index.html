@@ -3,119 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aim Trainer - Accueil Elite</title>
+    <title>Aim Trainer - Dashboard</title>
     <style>
         :root {
             --primary: #ff2d2d;
-            --primary-hover: #ff5e5e;
-            --bg-dark: #0a0a0a;
-            --card-bg: #161616;
+            --primary-glow: rgba(255, 45, 45, 0.3);
+            --bg: #050505;
+            --card-bg: #0f0f0f;
             --text-main: #ffffff;
-            --text-dim: #a0a0a0;
+            --text-dim: #888888;
         }
 
         body {
             margin: 0;
-            background-color: var(--bg-dark);
+            background-color: var(--bg);
             color: var(--text-main);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* En-tête stylisé */
+        /* Arrière-plan décoratif */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 45, 45, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 45, 45, 0.05) 0%, transparent 40%);
+            z-index: -1;
+        }
+
         header {
-            margin-top: 60px;
+            margin-top: 80px;
             text-align: center;
+            animation: fadeInDown 0.8s ease-out;
         }
 
         h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
+            font-size: 4rem;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: -2px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            background: linear-gradient(to bottom, #fff 40%, #888 100%);
+            background: linear-gradient(to bottom, #fff 50%, #666 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
             color: var(--text-dim);
-            font-size: 1.1rem;
-            margin-bottom: 50px;
+            font-size: 1rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: 10px;
         }
 
-        /* Grille de cartes */
+        /* Grille des modes de jeu */
         .container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            gap: 20px;
             width: 90%;
             max-width: 1200px;
-            padding: 20px;
+            margin: 60px 0;
+            animation: fadeInUp 1s ease-out;
         }
 
         .card {
+            position: relative;
             background: var(--card-bg);
-            border: 1px solid #2a2a2a;
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
             padding: 40px 30px;
-            border-radius: 16px;
             text-decoration: none;
             color: white;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
-            overflow: hidden;
+            text-align: center;
         }
 
-        /* Effet de lueur au survol */
-        .card::before {
+        /* Ligne de couleur sur le dessus */
+        .card::after {
             content: "";
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(255, 45, 45, 0.1) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
         .card:hover {
-            border-color: var(--primary);
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(255, 45, 45, 0.1);
+            border-color: #333;
+            transform: translateY(-8px);
+            background: #141414;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
-        .card:hover::before {
-            opacity: 1;
+        .card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            filter: grayscale(1);
+            transition: 0.3s;
+        }
+
+        .card:hover .card-icon {
+            filter: grayscale(0) drop-shadow(0 0 10px var(--primary-glow));
         }
 
         .card h2 {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            position: relative;
+            font-size: 1.4rem;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .card p {
+            font-size: 0.9rem;
             color: var(--text-dim);
-            line-height: 1.5;
-            font-size: 0.95rem;
+            line-height: 1.6;
             margin: 0;
-            position: relative;
         }
 
-        /* Icône décorative (optionnelle) */
-        .card-icon {
-            font-size: 40px;
-            margin-bottom: 20px;
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Responsive */
-        @media (max-width: 600px) {
-            h1 { font-size: 2rem; }
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
             .container { grid-template-columns: 1fr; }
         }
     </style>
@@ -124,32 +157,32 @@
 
     <header>
         <h1>Aim Trainer</h1>
-        <p class="subtitle">Améliorez vos performances et vos réflexes</p>
+        <div class="subtitle">Peak Performance Training</div>
     </header>
 
     <div class="container">
         <a href="entrainement clique.html" class="card">
             <div class="card-icon">🎯</div>
             <h2>Précision</h2>
-            <p>Travaillez votre précision en cliquant sur des cibles dynamiques.</p>
+            <p>Améliorez votre "flick-shot" et votre précision sur des cibles statiques et mouvantes.</p>
         </a>
 
         <a href="entrainement suivie.html" class="card">
-            <div class="card-icon">🔀</div>
-            <h2>Suivi</h2>
-            <p>Gardez le curseur sur la cible pour améliorer votre tracking.</p>
+            <div class="card-icon">👁️</div>
+            <h2>Tracking</h2>
+            <p>Entraînez votre capacité à suivre une cible en mouvement de manière fluide.</p>
         </a>
 
         <a href="cps.html" class="card">
             <div class="card-icon">⚡</div>
-            <h2>Vitesse (CPS)</h2>
-            <p>Défiez les lois de la physique avec votre vitesse de clic.</p>
+            <h2>Vitesse</h2>
+            <p>Mesurez votre nombre de clics par seconde (CPS) et dépassez vos limites.</p>
         </a>
 
         <a href="reflexes.html" class="card">
-            <div class="card-icon">⏱️</div>
+            <div class="card-icon">⏲️</div>
             <h2>Réflexes</h2>
-            <p>Testez votre temps de réaction et votre perception du temps.</p>
+            <p>Testez votre temps de réaction pur et votre perception du temps.</p>
         </a>
     </div>
 
