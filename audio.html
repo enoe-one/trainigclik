@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Aim Trainer - Écho Auditif</title>
+    <style>
+        :root { --primary: #a32dff; --bg: #050505; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; text-align: center; overflow: hidden; }
+        
+        header { background: rgba(10,10,10,0.9); padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--primary); }
+        header a { color: #666; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        header a:hover, header a.active { color: var(--primary); }
+
+        #game-zone { width: 100vw; height: calc(100vh - 70px); position: relative; cursor: crosshair; display: flex; align-items: center; justify-content: center; }
+        
+        .instruction { font-size: 1.5rem; color: #444; pointer-events: none; }
+        
+        /* La cible est invisible au début, elle flashe quand on clique */
+        #target {
+            position: absolute; width: 60px; height: 60px; background: var(--primary);
+            border-radius: 50%; opacity: 0; transition: opacity 0.2s; box-shadow: 0 0 30px var(--primary);
+        }
+        
+        #hud { position: fixed; top: 80px; left: 20px; text-align: left; }
+        .score-val { color: var(--primary); font-size: 2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html">ACCUEIL</a>
+    <a href="entrainement clique.html">PRÉCISION</a>
+    <a href="entrainement suivie.html">SUIVI</a>
+    <a href="cps.html">VITESSE</a>
+    <a href="reflexes.html">RÉFLEXES</a>
+    <a href="audio.html" class="active">ÉCHO AUDITIF</a>
+</header>
+
+<div id="hud">
+    <div style="font-size: 0.8rem; color: #888;">SCORE</div>
+    <div id="score" class="score-val">0</div>
+</div>
+
+<div id="game-zone" onclick="checkClick(event)">
+    <div class="instruction" id="msg">Clique pour entendre le son...</div>
+    <div id="target"></div>
+</div>
+
+<script>
+    let score = 0;
+    let targetX, targetY;
+    let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const targetEl = document.getElementById('target');
+    const msgEl = document.getElementById('msg');
+
+    function playSpatialSound(panValue) {
+        const oscillator = audioCtx.createOscillator();
+        const panNode = audioCtx.createStereoPanner();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
+        panNode.pan.setValueAtTime(panValue, audioCtx.currentTime);
+        
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+
+        oscillator.connect(panNode);
+        panNode.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.5);
+    }
+
+    function spawnTarget() {
+        // Position aléatoire
+        targetX = Math.random() * (window.innerWidth - 100) + 50;
+        targetY = Math.random() * (window.innerHeight - 200) + 150;
+        
+        targetEl.style.left = targetX + 'px';
+        targetEl.style.top = targetY + 'px';
+        targetEl.style.opacity = "0";
+
+        // Calcul du "Pan" (son gauche/droite) basé sur la position X
+        // -1 = total gauche, 1 = total droite
+        let pan = (targetX / window.innerWidth) * 2 - 1;
+        playSpatialSound(pan);
+        msgEl.textContent = "D'où vient le son ?";
+    }
+
+    function checkClick(e) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        if (msgEl.textContent.includes("Clique pour entendre")) {
+            spawnTarget();
+            return;
+        }
+
+        // Calcul de la distance entre le clic et la cible
+        const dist = Math.hypot(e.clientX - (targetX + 30), e.clientY - (targetY + 30));
+
+        if (dist < 80) { // Si proche de la cible
+            score += 10;
+            msgEl.textContent = "Bien joué !";
+        } else {
+            msgEl.textContent = "Raté...";
+        }
+
+        // Flash visuel de la cible pour montrer où elle était
+        targetEl.style.opacity = "1";
+        document.getElementById('score').textContent = score;
+
+        setTimeout(spawnTarget, 1000);
+    }
+</script>
+</body>
+</html>
