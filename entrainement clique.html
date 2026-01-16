@@ -2,28 +2,142 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Aim Trainer - Précision</title>
+    <title>Aim Trainer - Précision Pro</title>
     <style>
-        :root { --primary: #ff2d2d; --bg: #0a0a0a; --card: #161616; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', Arial; overflow: hidden; }
-        
-        /* Header */
-        header { background: #111; padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--primary); }
-        header a { color: #a0a0a0; text-decoration: none; font-weight: bold; transition: 0.3s; }
-        header a:hover, header a.active { color: var(--primary); }
-
-        #menu { text-align: center; padding-top: 50px; overflow-y: auto; height: calc(100vh - 70px); }
-        .difficulty-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 30px; }
-        
-        button { 
-            background: var(--card); border: 1px solid #333; color: white; padding: 20px 30px; 
-            border-radius: 10px; cursor: pointer; transition: 0.3s; min-width: 120px;
+        :root {
+            --primary: #ff2d2d;
+            --primary-glow: rgba(255, 45, 45, 0.5);
+            --bg: #050505;
+            --card: #111111;
         }
-        button:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255,45,45,0.2); }
 
-        #game { display: none; width: 100vw; height: 100vh; position: relative; cursor: crosshair; }
-        .dot { position: absolute; border-radius: 50%; background: var(--primary); box-shadow: 0 0 15px var(--primary); cursor: pointer; }
-        #hud { position: fixed; top: 80px; left: 20px; font-size: 20px; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 5px; }
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Header moderne */
+        header {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            border-bottom: 1px solid #222;
+            position: fixed;
+            top: 0; width: 100%;
+            z-index: 100;
+        }
+
+        header a {
+            color: #666;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        header a:hover, header a.active {
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        /* Menu de difficulté */
+        #menu {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to bottom, #fff, #666);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .difficulty-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .btn-diff {
+            background: var(--card);
+            border: 1px solid #333;
+            color: white;
+            padding: 25px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            min-width: 140px;
+        }
+
+        .btn-diff:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 15px var(--primary-glow);
+        }
+
+        .btn-diff span { font-size: 0.8rem; color: #666; }
+
+        /* Zone de jeu */
+        #game {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            cursor: crosshair;
+        }
+
+        .dot {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+            transition: transform 0.1s ease-out;
+            animation: spawn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes spawn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* HUD */
+        #hud {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            pointer-events: none;
+        }
+
+        .stat-item { text-align: center; }
+        .stat-val { display: block; font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 0.7rem; text-transform: uppercase; color: #888; }
     </style>
 </head>
 <body>
@@ -37,37 +151,55 @@
 </header>
 
 <div id="menu">
-    <h1>Entraînement de Précision</h1>
-    <p>Cliquez sur les cibles le plus vite possible.</p>
-    <div class="difficulty-container">
-        <button onclick="start('facile')">Facile</button>
-        <button onclick="start('moyen')">Moyen</button>
-        <button onclick="start('difficile')">Difficile</button>
-        <button onclick="start('extreme')">Extreme</button>
-        <button onclick="start('god')">God</button>
+    <h1>PRÉCISION</h1>
+    <p style="color: #888;">Échauffez vos réflexes de tir</p>
+    
+    <div class="difficulty-grid">
+        <button class="btn-diff" onclick="start('facile')">FACILE <span>50px / 1.2s</span></button>
+        <button class="btn-diff" onclick="start('moyen')">MOYEN <span>40px / 0.9s</span></button>
+        <button class="btn-diff" onclick="start('difficile')">HARD <span>30px / 0.7s</span></button>
+        <button class="btn-diff" onclick="start('extreme')">ELITE <span>20px / 0.4s</span></button>
+        <button class="btn-diff" onclick="start('god')">GOD <span>15px / 0.3s</span></button>
     </div>
 </div>
 
 <div id="game">
-    <div id="hud">Temps : <span id="time">120</span>s | Score : <span id="score">0</span></div>
+    <div id="hud">
+        <div class="stat-item">
+            <span class="stat-label">Temps</span>
+            <span id="time" class="stat-val">60</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Score</span>
+            <span id="score" class="stat-val">0</span>
+        </div>
+    </div>
 </div>
 
 <script>
-let score = 0, time = 120, gameInterval = null, dotTimer = null, currentConfig = null;
+let score = 0, time = 60, gameInterval = null, dotTimer = null, currentConfig = null;
+
 const difficulty = {
-    facile: { size: 50, delay: 1200 }, moyen: { size: 40, delay: 900 },
-    difficile: { size: 30, delay: 700 }, extreme: { size: 20, delay: 450 }, god: { size: 15, delay: 300 }
+    facile: { size: 50, delay: 1200 },
+    moyen: { size: 40, delay: 900 },
+    difficile: { size: 30, delay: 700 },
+    extreme: { size: 20, delay: 450 },
+    god: { size: 15, delay: 300 }
 };
 
 function start(level) {
     currentConfig = difficulty[level];
     document.getElementById("menu").style.display = "none";
     document.getElementById("game").style.display = "block";
-    score = 0; time = 120;
+    
+    score = 0;
+    time = 60; // Réduit à 60s pour plus d'intensité
     updateHUD();
     spawnDot();
+
     gameInterval = setInterval(() => {
-        time--; updateHUD();
+        time--;
+        updateHUD();
         if (time <= 0) endGame();
     }, 1000);
 }
@@ -79,18 +211,64 @@ function updateHUD() {
 
 function spawnDot() {
     removeDot();
+
     const dot = document.createElement("div");
     dot.className = "dot";
     dot.style.width = dot.style.height = currentConfig.size + "px";
-    dot.style.left = Math.random() * (window.innerWidth - currentConfig.size) + "px";
-    dot.style.top = Math.random() * (window.innerHeight - currentConfig.size - 70) + 70 + "px";
-    dot.onclick = (e) => { e.stopPropagation(); score++; updateHUD(); spawnDot(); };
+
+    // Calcul pour éviter que la cible ne sorte de l'écran ou ne se cache sous le header
+    const x = Math.random() * (window.innerWidth - currentConfig.size - 40) + 20;
+    const y = Math.random() * (window.innerHeight - currentConfig.size - 140) + 120;
+
+    dot.style.left = x + "px";
+    dot.style.top = y + "px";
+
+    dot.onmousedown = (e) => {
+        e.stopPropagation();
+        score++;
+        updateHUD();
+        createHitEffect(x + currentConfig.size/2, y + currentConfig.size/2);
+        spawnDot();
+    };
+
     document.getElementById("game").appendChild(dot);
+
     dotTimer = setTimeout(spawnDot, currentConfig.delay);
 }
 
-function removeDot() { clearTimeout(dotTimer); const d = document.querySelector(".dot"); if (d) d.remove(); }
-function endGame() { clearInterval(gameInterval); removeDot(); alert("Fin ! Score : " + score); location.reload(); }
+function createHitEffect(x, y) {
+    const effect = document.createElement("div");
+    effect.style.position = "fixed";
+    effect.style.left = x + "px";
+    effect.style.top = y + "px";
+    effect.style.width = "2px";
+    effect.style.height = "2px";
+    effect.style.boxShadow = "0 0 30px 10px var(--primary)";
+    effect.style.borderRadius = "50%";
+    effect.style.pointerEvents = "none";
+    effect.style.transition = "transform 0.4s, opacity 0.4s";
+    document.body.appendChild(effect);
+
+    setTimeout(() => {
+        effect.style.transform = "scale(10)";
+        effect.style.opacity = "0";
+    }, 10);
+    setTimeout(() => effect.remove(), 500);
+}
+
+function removeDot() {
+    clearTimeout(dotTimer);
+    const d = document.querySelector(".dot");
+    if (d) d.remove();
+}
+
+function endGame() {
+    clearInterval(gameInterval);
+    removeDot();
+    alert("🔥 SESSION TERMINÉE !\nScore total : " + score + "\nPrécision temporelle : " + ((score/60).toFixed(2)) + " cibles/sec");
+    location.reload();
+}
 </script>
+
 </body>
 </html>
