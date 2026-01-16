@@ -2,27 +2,27 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Aim Trainer - Écho Auditif</title>
+    <title>Aim Trainer - Écho Auditif Pro</title>
     <style>
         :root { --primary: #a32dff; --bg: #050505; }
         body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; text-align: center; overflow: hidden; }
         
         header { background: rgba(10,10,10,0.9); padding: 15px; display: flex; justify-content: center; gap: 20px; border-bottom: 2px solid var(--primary); }
-        header a { color: #666; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        header a { color: #666; text-decoration: none; font-weight: bold; transition: 0.3s; font-size: 0.9rem; }
         header a:hover, header a.active { color: var(--primary); }
 
-        #game-zone { width: 100vw; height: calc(100vh - 70px); position: relative; cursor: crosshair; display: flex; align-items: center; justify-content: center; }
+        #game-zone { width: 100vw; height: calc(100vh - 70px); position: relative; cursor: crosshair; background: black; }
         
-        .instruction { font-size: 1.5rem; color: #444; pointer-events: none; }
+        .instruction { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2rem; color: #333; pointer-events: none; text-transform: uppercase; letter-spacing: 2px; }
         
-        /* La cible est invisible au début, elle flashe quand on clique */
         #target {
-            position: absolute; width: 60px; height: 60px; background: var(--primary);
-            border-radius: 50%; opacity: 0; transition: opacity 0.2s; box-shadow: 0 0 30px var(--primary);
+            position: absolute; width: 50px; height: 50px; 
+            border-radius: 50%; opacity: 0; pointer-events: none;
+            transition: opacity 0.1s;
         }
         
-        #hud { position: fixed; top: 80px; left: 20px; text-align: left; }
-        .score-val { color: var(--primary); font-size: 2rem; font-weight: bold; }
+        #hud { position: fixed; top: 90px; left: 30px; text-align: left; z-index: 10; }
+        .score-val { color: var(--primary); font-size: 2.5rem; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -33,23 +33,26 @@
     <a href="entrainement suivie.html">SUIVI</a>
     <a href="cps.html">VITESSE</a>
     <a href="reflexes.html">RÉFLEXES</a>
-    <a href="audio.html" class="active">ÉCHO AUDITIF</a>
+    <a href="audio.html" class="active">AUDIO</a>
+    <a href="bomb.html">BOMB SQUAD</a>
 </header>
 
 <div id="hud">
-    <div style="font-size: 0.8rem; color: #888;">SCORE</div>
+    <div style="font-size: 0.7rem; color: #888; letter-spacing: 1px;">SCORE</div>
     <div id="score" class="score-val">0</div>
 </div>
 
-<div id="game-zone" onclick="checkClick(event)">
-    <div class="instruction" id="msg">Clique pour entendre le son...</div>
+<div id="game-zone" onmousedown="checkClick(event)">
+    <div class="instruction" id="msg">Clique pour commencer l'écoute</div>
     <div id="target"></div>
 </div>
 
 <script>
     let score = 0;
     let targetX, targetY;
+    let isWaitingForClick = false;
     let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
     const targetEl = document.getElementById('target');
     const msgEl = document.getElementById('msg');
 
@@ -62,56 +65,59 @@
         oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
         panNode.pan.setValueAtTime(panValue, audioCtx.currentTime);
         
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.1);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.6);
 
         oscillator.connect(panNode);
         panNode.connect(gainNode);
         gainNode.connect(audioCtx.destination);
 
         oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.5);
+        oscillator.stop(audioCtx.currentTime + 0.6);
     }
 
     function spawnTarget() {
-        // Position aléatoire
-        targetX = Math.random() * (window.innerWidth - 100) + 50;
-        targetY = Math.random() * (window.innerHeight - 200) + 150;
-        
-        targetEl.style.left = targetX + 'px';
-        targetEl.style.top = targetY + 'px';
         targetEl.style.opacity = "0";
+        // Position aléatoire (on évite les bords)
+        targetX = Math.random() * (window.innerWidth - 150) + 75;
+        targetY = Math.random() * (window.innerHeight - 250) + 150;
+        
+        targetEl.style.left = (targetX - 25) + 'px';
+        targetEl.style.top = (targetY - 25) + 'px';
 
-        // Calcul du "Pan" (son gauche/droite) basé sur la position X
-        // -1 = total gauche, 1 = total droite
         let pan = (targetX / window.innerWidth) * 2 - 1;
         playSpatialSound(pan);
-        msgEl.textContent = "D'où vient le son ?";
+        
+        msgEl.textContent = ""; 
+        isWaitingForClick = true;
     }
 
     function checkClick(e) {
         if (audioCtx.state === 'suspended') audioCtx.resume();
 
-        if (msgEl.textContent.includes("Clique pour entendre")) {
+        if (!isWaitingForClick) {
             spawnTarget();
             return;
         }
 
-        // Calcul de la distance entre le clic et la cible
-        const dist = Math.hypot(e.clientX - (targetX + 30), e.clientY - (targetY + 30));
+        isWaitingForClick = false;
+        const dist = Math.hypot(e.clientX - targetX, e.clientY - targetY);
 
-        if (dist < 80) { // Si proche de la cible
+        if (dist < 100) { // Zone de réussite assez large car c'est au son
             score += 10;
-            msgEl.textContent = "Bien joué !";
+            targetEl.style.background = "white";
+            targetEl.style.boxShadow = "0 0 30px white";
         } else {
-            msgEl.textContent = "Raté...";
+            targetEl.style.background = "var(--primary)";
+            targetEl.style.boxShadow = "0 0 30px var(--primary)";
         }
 
-        // Flash visuel de la cible pour montrer où elle était
+        // On montre la cible SEULEMENT après le clic
         targetEl.style.opacity = "1";
         document.getElementById('score').textContent = score;
 
-        setTimeout(spawnTarget, 1000);
+        setTimeout(spawnTarget, 1200);
     }
 </script>
 </body>
