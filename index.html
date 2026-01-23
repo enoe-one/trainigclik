@@ -1,176 +1,244 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aim Trainer - Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aim Trainer - Dashboard Elite</title>
 
-<style>
-:root {
-    --primary: #ff2d2d;
-    --bg: #050505;
-    --card-bg: #0f0f0f;
-    --text-dim: #888;
-}
+    <style>
+        :root {
+            --primary: #ff2d2d;
+            --bg: #050505;
+            --card-bg: #0f0f0f;
+            --text-dim: #888;
+            --accent: #2dfb2d;
+        }
 
-body {
-    margin: 0;
-    background-color: var(--bg);
-    color: white;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-}
+        body {
+            margin: 0;
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
 
-/* ================= DASHBOARD ================= */
+        /* ================= DASHBOARD ================= */
 
-header {
-    width: 100%;
-    padding: 20px 0;
-    background: rgba(10, 10, 10, 0.9);
-    border-bottom: 1px solid #222;
-    text-align: center;
-}
+        header {
+            width: 100%;
+            padding: 20px 0;
+            background: rgba(10, 10, 10, 0.95);
+            border-bottom: 1px solid #222;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-    color: white;
-    text-decoration: none;
-}
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: white;
+            text-decoration: none;
+        }
 
-.logo span { color: var(--primary); }
+        .logo span { color: var(--primary); }
 
-.hero {
-    text-align: center;
-    padding: 60px 20px;
-}
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+        }
 
-.hero h1 {
-    font-size: 3.5rem;
-    margin: 0;
-    background: linear-gradient(to bottom, #fff 50%, #666 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+        .hero h1 {
+            font-size: 4rem;
+            margin: 0;
+            background: linear-gradient(to bottom, #fff 40%, #444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
 
-.container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    width: 90%;
-    max-width: 1200px;
-    padding-bottom: 50px;
-    margin: auto;
-}
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 90%;
+            max-width: 1200px;
+            padding-bottom: 80px;
+            margin: auto;
+        }
 
-.card {
-    background: var(--card-bg);
-    border: 1px solid #1a1a1a;
-    border-radius: 12px;
-    padding: 30px;
-    text-decoration: none;
-    color: white;
-    transition: 0.3s;
-    border-top: 3px solid transparent;
-}
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #1a1a1a;
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
 
-.card:hover {
-    transform: translateY(-8px);
-    background: #141414;
-}
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
 
-.card-icon { font-size: 2.5rem; margin-bottom: 15px; }
-.card h2 { margin: 0 0 10px; font-size: 1.2rem; }
-.card p { font-size: 0.9rem; color: var(--text-dim); }
+        .card:hover {
+            transform: translateY(-12px);
+            background: #161616;
+            border-color: #333;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
 
-/* ================= CONTRAT ================= */
+        .card:hover::before { transform: scaleX(1); }
 
-#consent-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-}
+        .card-icon { font-size: 3rem; margin-bottom: 20px; display: block; }
+        .card h2 { margin: 0 0 12px; font-size: 1.4rem; letter-spacing: 1px; }
+        .card p { font-size: 0.95rem; color: var(--text-dim); line-height: 1.5; }
 
-.consent-box {
-    background: #111;
-    border: 1px solid #222;
-    border-radius: 12px;
-    padding: 30px;
-    max-width: 550px;
-    text-align: left;
-    font-size: 0.9rem;
-}
+        /* ================= OVERLAY CONTRAT MASSIF ================= */
 
-.consent-box h2 {
-    text-align: center;
-    margin-top: 0;
-}
+        #consent-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.98);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        }
 
-.consent-box p {
-    color: #bbb;
-    line-height: 1.6;
-}
+        .consent-box {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 95%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 100px rgba(255, 45, 45, 0.1);
+        }
 
-.hidden {
-    font-size: 0.55rem;
-    opacity: 0.25;
-}
+        .consent-box h2 {
+            text-align: center;
+            margin-top: 0;
+            font-size: 1.8rem;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
 
-.consent-buttons {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
+        .contract-scroll {
+            overflow-y: scroll;
+            padding: 20px;
+            margin: 20px 0;
+            background: #070707;
+            border: 1px solid #111;
+            border-radius: 10px;
+        }
 
-button {
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-}
+        /* Scrollbar Style */
+        .contract-scroll::-webkit-scrollbar { width: 6px; }
+        .contract-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
-.accept {
-    background: #2dfb2d;
-    color: black;
-}
+        .contract-scroll p, .contract-scroll li {
+            color: #999;
+            line-height: 1.8;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
 
-.refuse {
-    background: #ff2d2d;
-    color: white;
-}
+        .contract-scroll h3 {
+            color: #eee;
+            font-size: 1rem;
+            margin-top: 25px;
+            border-left: 3px solid var(--primary);
+            padding-left: 10px;
+        }
 
-/* ================= REFUS ================= */
+        .legal-footer {
+            font-size: 0.7rem;
+            color: #444;
+            text-align: center;
+            margin-top: 10px;
+        }
 
-#refuse-screen {
-    display: none;
-    text-align: center;
-}
+        .consent-buttons {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
 
-.progress-bar {
-    width: 100%;
-    height: 18px;
-    background: #222;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 20px;
-}
+        button {
+            padding: 15px 35px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 800;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
 
-.progress {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #ff2d2d, #ff8400);
-}
+        .accept {
+            background: var(--accent);
+            color: #000;
+        }
 
-#accept-later {
-    display: none;
-    margin-top: 25px;
-}
-</style>
+        .accept:hover { background: #22e022; transform: scale(1.05); }
+
+        .refuse {
+            background: #1a1a1a;
+            color: #666;
+        }
+
+        .refuse:hover { background: var(--primary); color: white; }
+
+        /* ================= ECRAN DE REFUS ================= */
+
+        #refuse-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: #111;
+            border-radius: 20px;
+            margin: 30px 0;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), #ff8400);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        #percent { font-size: 2rem; font-weight: 900; margin: 10px 0; }
+
+        #final-message {
+            display: none;
+            color: var(--primary);
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
 </head>
 
 <body>
@@ -180,76 +248,68 @@ button {
 </header>
 
 <div class="hero">
-    <h1>Dashboard d'Entraînement</h1>
-    <p style="color:#888;">Sélectionnez un module pour commencer</p>
+    <h1>Dominez l'Arène.</h1>
+    <p style="color:var(--text-dim); font-size: 1.2rem;">L'entraînement ultime pour les joueurs qui ne tolèrent pas l'échec.</p>
 </div>
 
 <div class="container">
-    <div class="card"><div class="card-icon">🎯</div><h2>Précision</h2><p>Entraînement à la précision.</p></div>
-    <div class="card"><div class="card-icon">👁️</div><h2>Suivi</h2><p>Tracking visuel.</p></div>
-    <div class="card"><div class="card-icon">⚡</div><h2>Vitesse</h2><p>Clicks rapides.</p></div>
-    <div class="card"><div class="card-icon">⏱️</div><h2>Réflexes</h2><p>Temps de réaction.</p></div>
+    <div class="card"><span class="card-icon">🎯</span><h2>Précision Absolue</h2><p>Réduisez votre marge d'erreur au pixel près sur des micro-cibles.</p></div>
+    <div class="card"><span class="card-icon">👁️</span><h2>Suivi Dynamique</h2><p>Maîtrisez le tracking fluide sur des trajectoires imprévisibles.</p></div>
+    <div class="card"><span class="card-icon">⚡</span><h2>Vitesse de Réaction</h2><p>Explosez vos records de clic et gagnez vos duels au réflexe.</p></div>
+    <div class="card"><span class="card-icon">⏱️</span><h2>Endurance</h2><p>Maintenez un niveau de performance constant sur de longues sessions.</p></div>
 </div>
-
-<!-- ================= OVERLAY ================= -->
 
 <div id="consent-overlay">
     <div class="consent-box">
+        
+        <div id="contract-ui">
+            <h2>Conditions Générales de Servitude Numérique</h2>
+            
+            <div class="contract-scroll">
+                <h3>ARTICLE 0 : PRÉAMBULE OBLIGATOIRE</h3>
+                <p>En accédant à cette plateforme, vous reconnaissez que votre temps de réaction est actuellement médiocre et que seule cette application peut vous sauver d'une vie de défaites humiliantes en ligne. Vous acceptez de ne pas nous tenir responsables de toute perte de sommeil, de vie sociale ou de santé mentale découlant de l'obsession de battre votre propre record.</p>
 
-        <div id="contract">
-            <h2>Contrat d’Utilisation</h2>
+                <h3>ARTICLE 1 : PROPRIÉTÉ DES RÉFLEXES</h3>
+                <p>L'Utilisateur concède à l'Éditeur une licence mondiale, irrévocable et perpétuelle sur l'ensemble de ses mouvements de poignet effectués dans l'application. Ces données seront utilisées pour entraîner une armée de robots ultra-précis qui, un jour, vous remplaceront probablement dans toutes vos tâches quotidiennes, y compris pour tenir votre brosse à dents.</p>
 
-            <p>
-                En accédant à AIM TRAINER, vous acceptez sans réserve les présentes
-                conditions générales d’utilisation, y compris celles que vous n’avez
-                pas lues, comprises ou mentalement ignorées.
-            </p>
+                <h3>ARTICLE 2 : COLLECTE DE DONNÉES INVASIVES</h3>
+                <p>Nous collectons : votre vitesse de clic, le modèle de votre souris (et nous vous jugerons si elle n'est pas "Gaming"), la force avec laquelle vous frappez votre bureau après un échec, et la fréquence de vos clignements d'yeux. De plus, vous autorisez l'application à accéder mentalement à vos souvenirs d'enfance pour vérifier si vous étiez déjà mauvais aux jeux de tir à l'époque.</p>
 
-            <p>
-                L’utilisateur reconnaît que la plateforme peut collecter des données
-                techniques non critiques telles que : vitesse de clic, humeur supposée,
-                nombre de cafés consommés aujourd’hui, et capacité à lire les contrats.
-            </p>
+                <h3>ARTICLE 3 : CLAUSE DE NON-RAGE</h3>
+                <p>Il est strictement interdit de briser votre écran, votre clavier ou votre dignité en public suite à une session de "Tracking" niveau Difficile. Tout matériel endommagé est sous votre entière responsabilité. L'Éditeur se réserve le droit d'envoyer un email de moquerie à vos contacts en cas de rage-quit détecté par nos capteurs de tension nerveuse.</p>
 
-            <p>
-                AIM TRAINER se réserve le droit moral, spirituel et cosmique
-                d’exister sans garantie de performance, de logique ou de bon sens.
-            </p>
+                <h3>ARTICLE 4 : LE PROTOCOLE PANDA</h3>
+                <p>En vertu de la loi imaginaire de 1984, vous vous engagez à ne jamais nourrir un panda après minuit tout en utilisant cette application. Le non-respect de cette clause peut entraîner l'inversion de votre axe vertical de souris de manière permanente et aléatoire. Les pandas sont nos amis, ne les impliquez pas dans votre manque de skill.</p>
 
-            <p class="hidden">
-                Clauses secondaires non visibles à l’œil nu :
-                l’utilisateur autorise symboliquement l’utilisation imaginaire de son
-                processeur, de son GPU, de son frigo et de son grille-pain à des fins
-                statistiques, artistiques ou totalement inutiles.
-                L’utilisateur accepte également que ses données fictives puissent être
-                transmises à personne, n’importe qui, ou à un hamster certifié.
-                VOUS DEVEZ respecter les pandas. Toute tentative de non-respect
-                des pandas entraînera une déception morale sévère.
-            </p>
+                <h3>ARTICLE 5 : CESSION DE TEMPS DE CERVEAU</h3>
+                <p>L'Utilisateur accepte que 15% de ses capacités cérébrales soient utilisées en arrière-plan pour résoudre des équations complexes visant à déterminer si l'ananas a sa place sur une pizza. Cette tâche est prioritaire sur votre précision de tir. Si vous ressentez une odeur de brûlé ou une soudaine envie de commander une Hawaïenne, c'est que le logiciel fonctionne correctement.</p>
 
-            <p>
-                En cliquant sur « Accepter », vous confirmez avoir lu ce texte
-                (ou fait semblant), et acceptez d’assumer vos choix de vie numériques.
-            </p>
+                <h3>ARTICLE 6 : EXCLUSION DE GARANTIE</h3>
+                <p>Nous ne garantissons pas que vous deviendrez un professionnel. Il est fort possible que vous restiez "Hardstuck Bronze" malgré 400 heures de pratique. Dans ce cas, l'Utilisateur s'engage à ne pas blâmer le code, mais plutôt son propre ADN. L'Éditeur décline toute responsabilité en cas de réalisation soudaine que vous auriez dû devenir comptable plutôt que joueur pro.</p>
+
+                <h3>ARTICLE 7 : VALIDITÉ ÉTERNELLE</h3>
+                <p>Ce contrat ne peut être résilié que par un combat singulier contre l'IA de niveau 99 dans une pièce sans lumière. Jusqu'à cette victoire, vous appartenez techniquement à notre base de données "Cobayes à haut potentiel de frustration".</p>
+
+                <p style="opacity: 0.5; font-style: italic;">Note : Si vous avez lu jusqu'ici, vous avez déjà perdu 3 minutes de votre vie que vous ne récupérerez jamais. Félicitations, vous êtes le client idéal.</p>
+            </div>
 
             <div class="consent-buttons">
-                <button class="accept" onclick="acceptCookies()">Accepter</button>
-                <button class="refuse" onclick="refuseCookies()">Refuser</button>
+                <button class="accept" onclick="acceptCookies()">J'accepte sans réfléchir</button>
+                <button class="refuse" onclick="refuseCookies()">Je refuse d'être meilleur</button>
             </div>
+            <div class="legal-footer">Document certifié conforme par le Conseil des Algorithmes (V. 2.0.26)</div>
         </div>
 
         <div id="refuse-screen">
-            <h2>Enregistrement de votre décision…</h2>
-            <p>Veuillez patienter pendant que nous respectons votre choix.</p>
-
-            <div class="progress-bar">
-                <div class="progress" id="progress"></div>
+            <h2>DÉSINSTALLATION DE VOTRE SKILL...</h2>
+            <p>Veuillez patienter pendant que nous supprimons vos chances de victoire.</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="bar"></div>
             </div>
-
-            <p id="percent">0 %</p>
-
-            <div id="accept-later">
-                <button class="accept" onclick="acceptCookies()">Finalement accepter les cookies 🍪</button>
+            <div id="percent">0%</div>
+            <div id="final-message">ERREUR : Refus impossible. Utilisateur trop têtu.</div>
+            <div id="re-accept" style="display:none; margin-top: 20px;">
+                <button class="accept" onclick="acceptCookies()">Finalement, j'accepte tout (Pitié)</button>
             </div>
         </div>
 
@@ -257,42 +317,44 @@ button {
 </div>
 
 <script>
-const overlay = document.getElementById('consent-overlay');
-const contract = document.getElementById('contract');
-const refuseScreen = document.getElementById('refuse-screen');
-const progress = document.getElementById('progress');
-const percent = document.getElementById('percent');
-const acceptLater = document.getElementById('accept-later');
+    const overlay = document.getElementById('consent-overlay');
+    const contractUI = document.getElementById('contract-ui');
+    const refuseScreen = document.getElementById('refuse-screen');
+    const bar = document.getElementById('bar');
+    const percentTxt = document.getElementById('percent');
+    const finalMsg = document.getElementById('final-message');
+    const reAcceptBtn = document.getElementById('re-accept');
 
-if (localStorage.getItem('cookiesAccepted') === 'true') {
-    overlay.style.display = 'none';
-}
+    // Vérifier si déjà accepté
+    if (localStorage.getItem('aimTrainerAccepted') === 'true') {
+        overlay.style.display = 'none';
+    }
 
-function acceptCookies() {
-    localStorage.setItem('cookiesAccepted', 'true');
-    overlay.style.display = 'none';
-}
+    function acceptCookies() {
+        localStorage.setItem('aimTrainerAccepted', 'true');
+        overlay.style.opacity = '0';
+        overlay.style.transition = '0.5s';
+        setTimeout(() => overlay.style.display = 'none', 500);
+    }
 
-function refuseCookies() {
-    contract.style.display = 'none';
-    refuseScreen.style.display = 'block';
+    function refuseCookies() {
+        contractUI.style.display = 'none';
+        refuseScreen.style.display = 'block';
 
-    let value = 0;
-    const duration = 30000;
-    const interval = 300;
-    const step = 100 / (duration / interval);
-
-    const timer = setInterval(() => {
-        value += step;
-        if (value >= 100) {
-            value = 100;
-            clearInterval(timer);
-            acceptLater.style.display = 'block';
-        }
-        progress.style.width = value + '%';
-        percent.textContent = Math.floor(value) + ' %';
-    }, interval);
-}
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 1.5; // Vitesse aléatoire pour stresser l'utilisateur
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                percentTxt.style.color = 'var(--primary)';
+                finalMsg.style.display = 'block';
+                reAcceptBtn.style.display = 'block';
+            }
+            bar.style.width = progress + '%';
+            percentTxt.innerText = Math.floor(progress) + '%';
+        }, 150);
+    }
 </script>
 
 </body>
