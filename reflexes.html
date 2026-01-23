@@ -51,6 +51,13 @@
         <p>Cliquez sur le carré pour l'armer. Quand il devient VERT, cliquez le plus vite possible !</p>
         <div id="reaction-area">Clique ici pour armer</div>
         <div id="result-reaction">Temps : --</div>
+        <div id="reaction-records" style="margin-top:15px; font-size:18px;">
+    <b>Top 3 Records :</b><br>
+    1️⃣ --<br>
+    2️⃣ --<br>
+    3️⃣ --
+</div>
+
     </div>
 </div>
 
@@ -84,12 +91,48 @@
     let reactionStart;
     let timeoutId;
     let isWaiting = false;
+// --- RECORDS RÉACTION (TOP 3) ---
+const recordDisplay = document.getElementById('reaction-records');
+
+// Charger les records depuis le navigateur
+let records = JSON.parse(localStorage.getItem('reactionRecords'));
+
+if (!records || records.length === 0) {
+    records = [0.085];
+    localStorage.setItem('reactionRecords', JSON.stringify(records));
+}
+
+// Affichage des records
+function updateRecordDisplay() {
+    recordDisplay.innerHTML = `<b>Top 3 Records :</b><br>`;
+    for (let i = 0; i < 3; i++) {
+        if (records[i] !== undefined) {
+            recordDisplay.innerHTML += `${i+1}️⃣ ${records[i].toFixed(3)} s<br>`;
+        } else {
+            recordDisplay.innerHTML += `${i+1}️⃣ --<br>`;
+        }
+    }
+}
+
+// Ajouter un nouveau temps
+function saveRecord(time) {
+    records.push(time);
+    records.sort((a, b) => a - b); // du plus rapide au plus lent
+    records = records.slice(0, 3); // garder top 3
+    localStorage.setItem('reactionRecords', JSON.stringify(records));
+    updateRecordDisplay();
+}
+
+// Initialisation
+updateRecordDisplay();
 
     reactionArea.onclick = () => {
         if (reactionArea.classList.contains('green')) {
             // Clic réussi sur le vert
-            let reactionTime = (Date.now() - reactionStart) / 1000;
-            reactionResult.textContent = `Temps : ${reactionTime}s`;
+let reactionTime = (Date.now() - reactionStart) / 1000;
+reactionResult.textContent = `Temps : ${reactionTime.toFixed(3)} s`;
+saveRecord(reactionTime);
+
             resetReaction();
         } 
         else if (isWaiting) {
@@ -122,4 +165,5 @@
 </script>
 
 </body>
+
 </html>
