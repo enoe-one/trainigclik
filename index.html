@@ -1,146 +1,299 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aim Trainer - Dashboard</title>
-    <style>
-        :root {
-            --primary: #ff2d2d; /* Rouge Precision */
-            --bg: #050505;
-            --card-bg: #0f0f0f;
-            --text-dim: #888;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aim Trainer - Dashboard</title>
 
-        body {
-            margin: 0;
-            background-color: var(--bg);
-            color: white;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
+<style>
+:root {
+    --primary: #ff2d2d;
+    --bg: #050505;
+    --card-bg: #0f0f0f;
+    --text-dim: #888;
+}
 
-        header {
-            width: 100%;
-            padding: 20px 0;
-            background: rgba(10, 10, 10, 0.9);
-            border-bottom: 1px solid #222;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+body {
+    margin: 0;
+    background-color: var(--bg);
+    color: white;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: white;
-            text-decoration: none;
-        }
+/* ================= DASHBOARD ================= */
 
-        .logo span { color: var(--primary); }
+header {
+    width: 100%;
+    padding: 20px 0;
+    background: rgba(10, 10, 10, 0.9);
+    border-bottom: 1px solid #222;
+    text-align: center;
+}
 
-        .hero {
-            text-align: center;
-            padding: 60px 20px;
-        }
+.logo {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: white;
+    text-decoration: none;
+}
 
-        .hero h1 {
-            font-size: 3.5rem;
-            margin: 0;
-            background: linear-gradient(to bottom, #fff 50%, #666 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+.logo span { color: var(--primary); }
 
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            width: 90%;
-            max-width: 1200px;
-            padding-bottom: 50px;
-        }
+.hero {
+    text-align: center;
+    padding: 60px 20px;
+}
 
-        .card {
-            background: var(--card-bg);
-            border: 1px solid #1a1a1a;
-            border-radius: 12px;
-            padding: 30px;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            border-top: 3px solid transparent;
-        }
+.hero h1 {
+    font-size: 3.5rem;
+    margin: 0;
+    background: linear-gradient(to bottom, #fff 50%, #666 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-        .card:hover {
-            transform: translateY(-8px);
-            background: #141414;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
-        }
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    width: 90%;
+    max-width: 1200px;
+    padding-bottom: 50px;
+    margin: auto;
+}
 
-        /* Couleurs spécifiques par mode pour la cohérence */
-        .card.precision:hover { border-top-color: #ff2d2d; }
-        .card.suivi:hover { border-top-color: #00d4ff; }
-        .card.vitesse:hover { border-top-color: #ffbd2d; }
-        .card.reflexes:hover { border-top-color: #2dfb2d; }
-        .card.audio:hover { border-top-color: #a32dff; }
-        .card.bomb:hover { border-top-color: #ff8400; }
+.card {
+    background: var(--card-bg);
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 30px;
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+    border-top: 3px solid transparent;
+}
 
-        .card-icon { font-size: 2.5rem; margin-bottom: 15px; }
-        .card h2 { margin: 0 0 10px 0; font-size: 1.2rem; text-transform: uppercase; }
-        .card p { font-size: 0.9rem; color: var(--text-dim); margin: 0; line-height: 1.5; }
+.card:hover {
+    transform: translateY(-8px);
+    background: #141414;
+}
 
-    </style>
+.card-icon { font-size: 2.5rem; margin-bottom: 15px; }
+.card h2 { margin: 0 0 10px; font-size: 1.2rem; }
+.card p { font-size: 0.9rem; color: var(--text-dim); }
+
+/* ================= CONTRAT ================= */
+
+#consent-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.consent-box {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 550px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.consent-box h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+.consent-box p {
+    color: #bbb;
+    line-height: 1.6;
+}
+
+.hidden {
+    font-size: 0.55rem;
+    opacity: 0.25;
+}
+
+.consent-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.accept {
+    background: #2dfb2d;
+    color: black;
+}
+
+.refuse {
+    background: #ff2d2d;
+    color: white;
+}
+
+/* ================= REFUS ================= */
+
+#refuse-screen {
+    display: none;
+    text-align: center;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 18px;
+    background: #222;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.progress {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff2d2d, #ff8400);
+}
+
+#accept-later {
+    display: none;
+    margin-top: 25px;
+}
+</style>
 </head>
+
 <body>
 
-    <header>
-        <a href="index.html" class="logo">AIM<span>TRAINER</span></a>
-    </header>
+<header>
+    <a href="#" class="logo">AIM<span>TRAINER</span></a>
+</header>
 
-    <div class="hero">
-        <h1>Dashboard d'Entraînement</h1>
-        <p style="color: var(--text-dim);">Sélectionnez un module pour commencer votre session</p>
+<div class="hero">
+    <h1>Dashboard d'Entraînement</h1>
+    <p style="color:#888;">Sélectionnez un module pour commencer</p>
+</div>
+
+<div class="container">
+    <div class="card"><div class="card-icon">🎯</div><h2>Précision</h2><p>Entraînement à la précision.</p></div>
+    <div class="card"><div class="card-icon">👁️</div><h2>Suivi</h2><p>Tracking visuel.</p></div>
+    <div class="card"><div class="card-icon">⚡</div><h2>Vitesse</h2><p>Clicks rapides.</p></div>
+    <div class="card"><div class="card-icon">⏱️</div><h2>Réflexes</h2><p>Temps de réaction.</p></div>
+</div>
+
+<!-- ================= OVERLAY ================= -->
+
+<div id="consent-overlay">
+    <div class="consent-box">
+
+        <div id="contract">
+            <h2>Contrat d’Utilisation</h2>
+
+            <p>
+                En accédant à AIM TRAINER, vous acceptez sans réserve les présentes
+                conditions générales d’utilisation, y compris celles que vous n’avez
+                pas lues, comprises ou mentalement ignorées.
+            </p>
+
+            <p>
+                L’utilisateur reconnaît que la plateforme peut collecter des données
+                techniques non critiques telles que : vitesse de clic, humeur supposée,
+                nombre de cafés consommés aujourd’hui, et capacité à lire les contrats.
+            </p>
+
+            <p>
+                AIM TRAINER se réserve le droit moral, spirituel et cosmique
+                d’exister sans garantie de performance, de logique ou de bon sens.
+            </p>
+
+            <p class="hidden">
+                Clauses secondaires non visibles à l’œil nu :
+                l’utilisateur autorise symboliquement l’utilisation imaginaire de son
+                processeur, de son GPU, de son frigo et de son grille-pain à des fins
+                statistiques, artistiques ou totalement inutiles.
+                L’utilisateur accepte également que ses données fictives puissent être
+                transmises à personne, n’importe qui, ou à un hamster certifié.
+                VOUS DEVEZ respecter les pandas. Toute tentative de non-respect
+                des pandas entraînera une déception morale sévère.
+            </p>
+
+            <p>
+                En cliquant sur « Accepter », vous confirmez avoir lu ce texte
+                (ou fait semblant), et acceptez d’assumer vos choix de vie numériques.
+            </p>
+
+            <div class="consent-buttons">
+                <button class="accept" onclick="acceptCookies()">Accepter</button>
+                <button class="refuse" onclick="refuseCookies()">Refuser</button>
+            </div>
+        </div>
+
+        <div id="refuse-screen">
+            <h2>Enregistrement de votre décision…</h2>
+            <p>Veuillez patienter pendant que nous respectons votre choix.</p>
+
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+
+            <p id="percent">0 %</p>
+
+            <div id="accept-later">
+                <button class="accept" onclick="acceptCookies()">Finalement accepter les cookies 🍪</button>
+            </div>
+        </div>
+
     </div>
+</div>
 
-    <div class="container">
-        <a href="entrainement clique.html" class="card precision">
-            <div class="card-icon">🎯</div>
-            <h2>Précision</h2>
-            <p>Cliquez sur des cibles dynamiques pour améliorer votre précision de tir.</p>
-        </a>
+<script>
+const overlay = document.getElementById('consent-overlay');
+const contract = document.getElementById('contract');
+const refuseScreen = document.getElementById('refuse-screen');
+const progress = document.getElementById('progress');
+const percent = document.getElementById('percent');
+const acceptLater = document.getElementById('accept-later');
 
-        <a href="entrainement suivie.html" class="card suivi">
-            <div class="card-icon">👁️</div>
-            <h2>Suivi (Hover)</h2>
-            <p>Gardez votre curseur sur la cible sans cliquer pour entraîner votre tracking.</p>
-        </a>
+if (localStorage.getItem('cookiesAccepted') === 'true') {
+    overlay.style.display = 'none';
+}
 
-        <a href="cps.html" class="card vitesse">
-            <div class="card-icon">⚡</div>
-            <h2>Vitesse (CPS)</h2>
-            <p>Testez votre vitesse de clic pure sur un intervalle de 10 secondes.</p>
-        </a>
+function acceptCookies() {
+    localStorage.setItem('cookiesAccepted', 'true');
+    overlay.style.display = 'none';
+}
 
-        <a href="reflexes.html" class="card reflexes">
-            <div class="card-icon">⏱️</div>
-            <h2>Réflexes</h2>
-            <p>Perception du temps et temps de réaction visuel au changement de couleur.</p>
-        </a>
+function refuseCookies() {
+    contract.style.display = 'none';
+    refuseScreen.style.display = 'block';
 
-        <a href="audio.html" class="card audio">
-            <div class="card-icon">🎧</div>
-            <h2>Écho Auditif</h2>
-            <p>Entraînez votre oreille à localiser des cibles invisibles par le son.</p>
-        </a>
-    </div>
+    let value = 0;
+    const duration = 30000;
+    const interval = 300;
+    const step = 100 / (duration / interval);
+
+    const timer = setInterval(() => {
+        value += step;
+        if (value >= 100) {
+            value = 100;
+            clearInterval(timer);
+            acceptLater.style.display = 'block';
+        }
+        progress.style.width = value + '%';
+        percent.textContent = Math.floor(value) + ' %';
+    }, interval);
+}
+</script>
 
 </body>
 </html>
