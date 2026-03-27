@@ -98,7 +98,7 @@ const recordDisplay = document.getElementById('reaction-records');
 let records = JSON.parse(localStorage.getItem('reactionRecords'));
 
 if (!records || records.length === 0) {
-    records = [0.077];
+    records = [0.085];
     localStorage.setItem('reactionRecords', JSON.stringify(records));
 }
 
