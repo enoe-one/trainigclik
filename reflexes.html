@@ -51,11 +51,14 @@
         <p>Cliquez sur le carré pour l'armer. Quand il devient VERT, cliquez le plus vite possible !</p>
         <div id="reaction-area">Clique ici pour armer</div>
         <div id="result-reaction">Temps : --</div>
-        <div id="reaction-records" style="margin-top:15px; font-size:18px;">
-    <b>Top 3 Records :</b><br>
+<div id="reaction-records" style="margin-top:15px; font-size:18px;">
+    <b>Top 6 Records :</b><br>
     1️⃣ --<br>
     2️⃣ --<br>
-    3️⃣ --
+    3️⃣ --<br>
+    4️⃣ --<br>
+    5️⃣ --<br>
+    6️⃣ --
 </div>
 
     </div>
@@ -104,8 +107,8 @@ if (!records || records.length === 0) {
 
 // Affichage des records
 function updateRecordDisplay() {
-    recordDisplay.innerHTML = `<b>Top 3 Records :</b><br>`;
-    for (let i = 0; i < 3; i++) {
+    recordDisplay.innerHTML = `<b>Top 6 Records :</b><br>`;
+    for (let i = 0; i < 6; i++) {
         if (records[i] !== undefined) {
             recordDisplay.innerHTML += `${i+1}️⃣ ${records[i].toFixed(3)} s<br>`;
         } else {
@@ -118,7 +121,7 @@ function updateRecordDisplay() {
 function saveRecord(time) {
     records.push(time);
     records.sort((a, b) => a - b); // du plus rapide au plus lent
-    records = records.slice(0, 3); // garder top 3
+    records = records.slice(0, 6); // garder top 6
     localStorage.setItem('reactionRecords', JSON.stringify(records));
     updateRecordDisplay();
 }
